@@ -1,0 +1,130 @@
+import csv
+
+filename = str(raw_input("What file?"))
+
+print ""
+
+# open file
+f = open(filename)
+csv_f = csv.reader(f)
+
+win_list = []
+lose_list = []
+
+# sort data by winning or losing team
+for row in csv_f:
+    win_list.append(float(row[0]))
+    lose_list.append(float(row[1]))
+
+
+# code to calculate percentage difference
+def percent_calc(n1, n2):
+    z = 0
+    if n1 != n2:
+        z = (n1 - n2) / n2
+        return z
+
+    else:
+        return z
+
+
+ppg_difference = []
+fg_difference = []
+ft_difference = []
+threep_difference = []
+
+# find percent difference for each stat and sort by stat
+i = 0
+j = len(win_list)
+while i < j:
+    if i == 0 or (i % 4) == 0:
+        ppg_difference.append(percent_calc(win_list[i], lose_list[i]))
+        i += 1
+    if i == 1 or (i % 4) == 1:
+        fg_difference.append(percent_calc(win_list[i], lose_list[i]))
+        i += 1
+    if i == 2 or (i % 4) == 2:
+        ft_difference.append(percent_calc(win_list[i], lose_list[i]))
+        i += 1
+    if i == 3 or (i % 4) == 3:
+        threep_difference.append(percent_calc(win_list[i], lose_list[i]))
+        i += 1
+
+# sum differences
+ppg_sum = sum(ppg_difference)
+fg_sum = sum(fg_difference)
+ft_sum = sum(ft_difference)
+threep_sum = sum(threep_difference)
+
+# find max difference
+dict1 = {
+    "PPG": ppg_sum,
+    "FG%": fg_sum,
+    "FT%": ft_sum,
+    "3P%": threep_sum,
+}
+
+total = []
+
+for x in dict1.values():
+    total.append(x)
+
+m1 = max(total)
+
+for x, y in dict1.items():
+    if m1 == y:
+        print x + " has the largest positive percent difference (" + str(y*100) + "%)."
+
+
+print "PPG difference = " + str(ppg_sum)
+print "FG difference = " + str(fg_sum)
+print "FT difference = " + str(ft_sum)
+print "3P% difference = " + str(threep_sum)
+
+# set any negative differences to zero to not affect model
+if ppg_sum < 0:
+    ppg_sum = 0
+if fg_sum < 0:
+    fg_sum = 0
+if ft_sum < 0:
+    ft_sum = 0
+if threep_sum < 0:
+    threep_sum = 0
+
+print ""
+
+# get data for team 1
+t1 = str(raw_input("What is the first team to predict?"))
+ppg1 = float(raw_input("PPG?"))
+fg1 = float(raw_input("FG%? (IN DECIMAL FORM)"))
+ft1 = float(raw_input("FT%? (IN DECIMAL FORM)"))
+threep1 = float(raw_input("3P%? (IN DECIMAL FORM)"))
+
+print ""
+
+# get data for team 2
+t2 = str(raw_input("What is the second team to predict?"))
+ppg2 = float(raw_input("PPG?"))
+fg2 = float(raw_input("FG%? (IN DECIMAL FORM)"))
+ft2 = float(raw_input("FT%? (IN DECIMAL FORM)"))
+threep2 = float(raw_input("3P%? (IN DECIMAL FORM)"))
+
+# run percent_calc for every category
+p1 = percent_calc(ppg1, ppg2)
+p2 = percent_calc(fg1, fg2)
+p3 = percent_calc(ft1, ft2)
+p4 = percent_calc(threep1, threep2)
+
+# Model
+total = ppg_sum*p1 + fg_sum*p2 + ft_sum*p3 + threep_sum*p4
+
+print ""
+# total > 0 if in favor of t1, < 0 if in favor of t2
+if total > 0:
+    print t1 + " is more likely to win."
+elif total < 0:
+    print t2 + " is more likely to win."
+else:
+    print "Both teams are equally likely to win...flip a coin?"
+
+print 'Difference = ' + str(abs(total))
