@@ -1,6 +1,7 @@
+import math
 import csv
 
-filename = str(raw_input("What file?"))
+filename = str(raw_input("What file? (data)"))
 
 print ""
 
@@ -93,38 +94,98 @@ if threep_sum < 0:
 
 print ""
 
-# get data for team 1
-t1 = str(raw_input("What is the first team to predict?"))
-ppg1 = float(raw_input("PPG?"))
-fg1 = float(raw_input("FG%? (IN DECIMAL FORM)"))
-ft1 = float(raw_input("FT%? (IN DECIMAL FORM)"))
-threep1 = float(raw_input("3P%? (IN DECIMAL FORM)"))
+filename2 = str(raw_input("What file? (prediction)"))
+# open file
+f = open(filename2)
+csv_f = csv.reader(f)
 
-print ""
+left_list = []
+right_list = []
+left_names = []
+right_names = []
 
-# get data for team 2
-t2 = str(raw_input("What is the second team to predict?"))
-ppg2 = float(raw_input("PPG?"))
-fg2 = float(raw_input("FG%? (IN DECIMAL FORM)"))
-ft2 = float(raw_input("FT%? (IN DECIMAL FORM)"))
-threep2 = float(raw_input("3P%? (IN DECIMAL FORM)"))
+# sort data by winning or losing team
+for row in csv_f:
+    left_list.append(float(row[0]))
+    right_list.append(float(row[1]))
+    left_names.append(row[2])
+    right_names.append(row[3])
 
-# run percent_calc for every category
-p1 = percent_calc(ppg1, ppg2)
-p2 = percent_calc(fg1, fg2)
-p3 = percent_calc(ft1, ft2)
-p4 = percent_calc(threep1, threep2)
+print left_list
+print right_list
+print left_names
+print right_names
 
-# Model
-total = ppg_sum*p1 + fg_sum*p2 + ft_sum*p3 + threep_sum*p4
 
-print ""
-# total > 0 if in favor of t1, < 0 if in favor of t2
-if total > 0:
-    print t1 + " is more likely to win."
-elif total < 0:
-    print t2 + " is more likely to win."
-else:
-    print "Both teams are equally likely to win...flip a coin?"
+def total_calc(p1, p2, p3, p4, left_name, right_name):
 
-print 'Difference = ' + str(abs(total))
+    # Model
+    total_sum = ppg_sum*p1 + fg_sum*p2 + ft_sum*p3 + threep_sum*p4
+    print total_sum
+
+    print ""
+
+    if total_sum > 0:
+        print left_name + " is more likely to win."
+    elif total_sum < 0:
+        print right_name + " is more likely to win."
+    else:
+        print "Both teams are equally likely to win...flip a coin?"
+
+    print 'Difference = ' + str(abs(total_sum))
+
+
+a = 0
+b = len(win_list)
+while a < b:
+    p1, p2, p3, p4 = 0
+    if a == 0 or (a % 4) == 0:
+        p1 = percent_calc(win_list[a], lose_list[a])
+        a += 1
+    if a == 1 or (a % 4) == 1:
+        p2 = percent_calc(win_list[a], lose_list[a])
+        a += 1
+    if a == 2 or (a % 4) == 2:
+        p3 = percent_calc(win_list[a], lose_list[a])
+        a += 1
+    if a == 3 or (a % 4) == 3:
+        p4 = percent_calc(win_list[a], lose_list[a])
+        a += 1
+        total_calc(p1, p2, p3, p4, left_names(math.floor(a/4)), right_names(math.floor(a/4)))
+
+
+# # get data for team 1
+# t1 = str(raw_input("What is the first team to predict?"))
+# ppg1 = float(raw_input("PPG?"))
+# fg1 = float(raw_input("FG%? (IN DECIMAL FORM)"))
+# ft1 = float(raw_input("FT%? (IN DECIMAL FORM)"))
+# threep1 = float(raw_input("3P%? (IN DECIMAL FORM)"))
+#
+# print ""
+#
+# # get data for team 2
+# t2 = str(raw_input("What is the second team to predict?"))
+# ppg2 = float(raw_input("PPG?"))
+# fg2 = float(raw_input("FG%? (IN DECIMAL FORM)"))
+# ft2 = float(raw_input("FT%? (IN DECIMAL FORM)"))
+# threep2 = float(raw_input("3P%? (IN DECIMAL FORM)"))
+#
+# # run percent_calc for every category
+# p1 = percent_calc(ppg1, ppg2)
+# p2 = percent_calc(fg1, fg2)
+# p3 = percent_calc(ft1, ft2)
+# p4 = percent_calc(threep1, threep2)
+#
+# # Model
+# total = ppg_sum*p1 + fg_sum*p2 + ft_sum*p3 + threep_sum*p4
+#
+# print ""
+# # total > 0 if in favor of t1, < 0 if in favor of t2
+# if total > 0:
+#     print t1 + " is more likely to win."
+# elif total < 0:
+#     print t2 + " is more likely to win."
+# else:
+#     print "Both teams are equally likely to win...flip a coin?"
+#
+# print 'Difference = ' + str(abs(total))
