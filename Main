@@ -140,16 +140,16 @@ while a < b:
     p4 = 0
 
     if a == 0 or (a % 4) == 0:
-        p1 = percent_calc(win_list[a], lose_list[a])
+        p1 = percent_calc(left_list[a], right_list[a])
         a += 1
     if a == 1 or (a % 4) == 1:
-        p2 = percent_calc(win_list[a], lose_list[a])
+        p2 = percent_calc(left_list[a], right_list[a])
         a += 1
     if a == 2 or (a % 4) == 2:
-        p3 = percent_calc(win_list[a], lose_list[a])
+        p3 = percent_calc(left_list[a], right_list[a])
         a += 1
     if a == 3 or (a % 4) == 3:
-        p4 = percent_calc(win_list[a], lose_list[a])
+        p4 = percent_calc(left_list[a], right_list[a])
         a += 1
         total_calc(p1, p2, p3, p4, left_names[int(math.floor(a/4))-1], right_names[int(math.floor(a/4))-1])
 
